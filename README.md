@@ -121,6 +121,12 @@ CREATE TABLE dados (
   <img src="https://github.githubassets.com/images/spinners/octocat-spinner-32.gif" width="32" height="32" alt="Carregando..." />
 </p>
 
+## HOSPEDAGEM SIMPLES
+
+- Hospedagem na Vercel, ou alguma outra hospedagem que tenha preferência, segue alguns exemplos:
+- https://vercel.com
+- https://dashboard.render.com/login
+
 
 ## 🍀 Boa sorte e bons códigos!
 — Time Avelar
