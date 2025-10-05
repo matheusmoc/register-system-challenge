@@ -2,7 +2,10 @@
 
 ##  Descrição do Sistema
 
-Este é um sistema full-stack desenvolvido em Laravel 11 para gerenciamento de cadastros de pessoas. O sistema permite criar, visualizar, editar e excluir registros com validações completas tanto no frontend quanto no backend.
+Este é um sistema full-stack desenvolvido em Laravel 12 + Vue 2 para gerenciamento de cadastros de pessoas. O sistema permite criar, visualizar, editar e excluir registros com validações completas tanto no frontend quanto no backend.
+
+<img width="1919" height="927" alt="image" src="https://github.com/user-attachments/assets/fd9b2570-b364-4c1a-9786-2f1f75abe675" />
+
 
 ##  Funcionalidades
 
@@ -15,9 +18,13 @@ Este é um sistema full-stack desenvolvido em Laravel 11 para gerenciamento de c
 - ✅ **Confirmações** para ações destrutivas
 - ✅ **Ordenação** dos registros por ID decrescente
 
+<img width="1506" height="474" alt="image" src="https://github.com/user-attachments/assets/6f81daa8-be4a-45ed-a10b-1c5b891fddc1" />
+<img width="1560" height="530" alt="image" src="https://github.com/user-attachments/assets/8c4f10b0-7965-4af4-a745-c1a8b6cffc30" />
+<img width="1599" height="849" alt="image" src="https://github.com/user-attachments/assets/22e50eea-87eb-43cb-b6a0-ca697d1eab44" />
+
 ## Tecnologias Utilizadas
 
-- **Backend**: Laravel 11, PHP 8.2
+- **Backend**: Laravel 12, PHP 8.2
 - **Frontend**: Bootstrap 5, Vue 2, CSS3
 - **Banco de Dados**: MySQL
 - **Containerização**: Docker & Docker Compose
@@ -79,6 +86,7 @@ CREATE TABLE dados (
 - Máscara de salário (formato brasileiro)
 - Validação de arquivo (tipo e tamanho)
 
+
 ```php
 $validated = $request->validate([
     'nome' => 'required|string|max:150',
@@ -94,6 +102,8 @@ $validated = $request->validate([
     'anexo' => 'required|file|mimes:pdf,jpg,png|max:10240'
 ]);
 ```
+<img width="1906" height="886" alt="image" src="https://github.com/user-attachments/assets/dbea4487-fd6d-4e2b-9d5b-305a30d07c75" />
+
 
 ## 🌐 API Endpoints
 
