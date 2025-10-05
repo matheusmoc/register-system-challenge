@@ -216,13 +216,13 @@ new Vue({
                 this.carregando = false;
             }
         },
-        
+
         async salvarCadastro() {
             this.loading = true;
             this.errors = {};
             
             try {
-                if (!this.form.nome) this.errors.nome = 'Nome é obrigatório';
+                if (!this.form.nome || this.form.nome.trim() === '') this.errors.nome = 'Nome é obrigatório';
                 if (!this.form.idade) this.errors.idade = 'Idade é obrigatória';
                 if (!this.form.sexo) this.errors.sexo = 'Sexo é obrigatório';
                 if (!this.form.cep) this.errors.cep = 'CEP é obrigatório';
@@ -238,21 +238,51 @@ new Vue({
                 
                 const formData = new FormData();
                 
-                // FormData
+                console.log('=== ENVIANDO DADOS ===');
+                console.log('Editando:', this.editing);
+                console.log('ID:', this.form.id);
+                console.log('Dados do formulário:', this.form);
+                
                 Object.keys(this.form).forEach(key => {
-                    if (key !== 'id' && this.form[key] !== null && this.form[key] !== '') {
-                        if (key === 'anexo' && this.form.anexo instanceof File) {
-                            formData.append('anexo', this.form.anexo);
-                        } else if (key === 'ensino_medio') {
-                            formData.append('ensino_medio', this.form.ensino_medio ? '1' : '0');
-                        } else {
-                            formData.append(key, this.form[key]);
+                    if (key === 'anexo_nome') return;
+
+                    const value = this.form[key];
+                    let valueToSend = value;
+                    
+                    if (value === null || value === undefined) {
+                        valueToSend = '';
+                    }
+                    
+                    if (key === 'anexo') {
+                        if (value instanceof File) {
+                            formData.append('anexo', value);
+                            console.log('Adicionado anexo (arquivo):', value.name);
                         }
+
+                    } else if (key === 'ensino_medio') {
+                        formData.append('ensino_medio', value ? '1' : '0');
+                        console.log('Adicionado ensino_medio:', value ? '1' : '0');
+                    } else if (key === 'id' && this.editing) {
+                        // Incluir ID apenas quando estiver editando
+                        formData.append('_method', 'PUT'); 
+                        console.log('Adicionado ID para edição:', value);
+                    } else {
+                        // Campos normais
+                        formData.append(key, valueToSend);
+                        console.log(`Adicionado ${key}:`, valueToSend);
                     }
                 });
                 
+                console.log('=== CONTEÚDO DO FORMDATA ===');
+                for (let pair of formData.entries()) {
+                    console.log(pair[0] + ':', pair[1]);
+                }
+                
                 const url = this.editing ? `/cadastro/${this.form.id}` : '/cadastro';
-                const method = this.editing ? 'PUT' : 'POST';
+                const method = this.editing ? 'POST' : 'POST';
+                
+                console.log('URL:', url);
+                console.log('Método:', method);
                 
                 const response = await fetch(url, {
                     method: method,
@@ -264,6 +294,7 @@ new Vue({
                 });
                 
                 const data = await response.json();
+                console.log('Resposta do servidor:', data);
                 
                 if (data.success) {
                     this.mostrarToast(data.message, 'fas fa-check');

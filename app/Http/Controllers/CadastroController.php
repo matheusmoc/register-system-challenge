@@ -111,34 +111,24 @@ class CadastroController extends Controller
     public function update(Request $request, $id)
     {
         try {
+            Log::info('Update request:', ['id' => $id, 'data' => $request->all()]);
+
             $dados = $request->all();
             if ($request->hasFile('anexo')) {
                 $dados['anexo'] = $request->file('anexo');
             }
-            
-            $sucesso = $this->dadosService->atualizar($id, $dados);
-            
-            if (!$sucesso) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Registro não encontrado'
-                ], 404);
+
+            if (!$this->dadosService->atualizar($id, $dados)) {
+                return response()->json(['success' => false, 'message' => 'Registro não encontrado'], 404);
             }
 
-            return response()->json([
-                'success' => true,
-                'message' => 'Cadastro atualizado com sucesso!'
-            ]);
+            return response()->json(['success' => true, 'message' => 'Cadastro atualizado com sucesso!']);
+
         } catch (\InvalidArgumentException $e) {
-            return response()->json([
-                'success' => false,
-                'message' => $e->getMessage()
-            ], 422);
+            return response()->json(['success' => false, 'message' => $e->getMessage()], 422);
         } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Erro interno do servidor: ' . $e->getMessage()
-            ], 500);
+            Log::error('Update error: ' . $e->getMessage());
+            return response()->json(['success' => false, 'message' => 'Erro interno do servidor'], 500);
         }
     }
 

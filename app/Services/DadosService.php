@@ -49,7 +49,16 @@ class DadosService
             throw new \InvalidArgumentException($validacao['message']);
         }
 
-        if (isset($dados['anexo'])) {
+        if (isset($dados['anexo']) && $dados['anexo'] instanceof \Illuminate\Http\UploadedFile) {
+            if ($dados['anexo']->getSize() > 10 * 1024 * 1024) {
+                throw new \InvalidArgumentException('Arquivo muito grande. Máximo 10MB.');
+            }
+
+            $allowedTypes = ['application/pdf', 'image/jpeg', 'image/jpg', 'image/png'];
+            if (!in_array($dados['anexo']->getMimeType(), $allowedTypes)) {
+                throw new \InvalidArgumentException('Tipo de arquivo não permitido. Use PDF, JPG ou PNG.');
+            }
+
             $this->fileService->delete($registro->anexo);
             $dados['anexo'] = $this->fileService->upload($dados['anexo']);
         } else {
