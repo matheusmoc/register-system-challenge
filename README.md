@@ -38,8 +38,8 @@ Este é um sistema full-stack desenvolvido em Laravel 12 + Vue 2 para gerenciame
 ### Passo a Passo
 
 ```bash
-git clone https://github.com/seu-usuario/desafio-avelar.git
-cd desafio-avelar
+git clone https://github.com/matheusmoc/register-system-challenge.git
+cd register-system-challenge
 
 cp .env.example .env
 
