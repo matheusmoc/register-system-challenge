@@ -1,132 +1,138 @@
-# 🎓 Desafio Avelar
+# Sistema de Cadastro - Desafio
 
-Seja bem-vindo ao **Desafio Avelar**! 🚀  
-Este repositório é a base para avaliar suas habilidades full-stack em Laravel 11 (PHP 8.2). Siga este guia para configurar o ambiente e começar.
+##  Descrição do Sistema
 
----
+Este é um sistema full-stack desenvolvido em Laravel 11 para gerenciamento de cadastros de pessoas. O sistema permite criar, visualizar, editar e excluir registros com validações completas tanto no frontend quanto no backend.
 
-## 📋 Pré-requisitos
+##  Funcionalidades
 
-- **PHP** ≥ 8.2  
-- **Composer**  
-- **MySQL**  
-- **Git**  
-- **Node.js + npm** (opcional, apenas se for compilar assets)
+- ✅ **CRUD completo** de cadastros
+- ✅ **Validações** robustas no frontend e backend
+- ✅ **Integração com ViaCEP** para preenchimento automático de endereço
+- ✅ **Upload de arquivos** (PDF, JPG, PNG) até 10MB
+- ✅ **Interface responsiva** com Bootstrap
+- ✅ **Máscaras de entrada** para CEP e salário
+- ✅ **Confirmações** para ações destrutivas
+- ✅ **Ordenação** dos registros por ID decrescente
 
----
+## Tecnologias Utilizadas
 
-## 🛠️ Passo a Passo
+- **Backend**: Laravel 11, PHP 8.2
+- **Frontend**: Bootstrap 5, Vue 2, CSS3
+- **Banco de Dados**: MySQL
+- **Containerização**: Docker & Docker Compose
+
+## 🐳 Instalação com Docker
+
+### Pré-requisitos
+- Docker
+- Docker Compose
+
+### Passo a Passo
 
 ```bash
-# 1. Clonar o repositório
-git clone https://github.com/brnofreire/Desafio-Avelar.git
-cd Desafio-Avelar
+git clone https://github.com/seu-usuario/desafio-avelar.git
+cd desafio-avelar
 
-# 2. Instalar dependências PHP
-composer install
-
-# 3. Copiar e configurar variáveis de ambiente
 cp .env.example .env
-# abra .env e ajuste:
-# DB_DATABASE=seu_banco
-# DB_USERNAME=seu_usuario
-# DB_PASSWORD=sua_senha
 
-# 4. Gerar chave de aplicação
-php artisan key:generate
+# Inicie os containers
+docker-compose up -d
 
-# 5. Criar link simbólico para uploads
-php artisan storage:link
+# Execute os comandos do Laravel dentro do container
+docker-compose exec app composer install
+docker-compose exec app php artisan key:generate
+docker-compose exec app php artisan storage:link
 
-# 6. (Opcional) Instalar e compilar assets front-end
-npm install
-npm run dev
+http://localhost:8000
 
-# 7. Executar servidor de desenvolvimento
-php artisan serve
-# abra no navegador:
-# http://127.0.0.1:8000
-
+# Para parar a aplicação utilizar
+docker-compose down
 ```
-## 💾 Banco de Dados
-Antes de rodar a aplicação, no seu cliente MySQL execute:
 
-```bash
+## Estrutura do Banco de Dados
+
+```sql
 CREATE TABLE dados (
   id INT AUTO_INCREMENT PRIMARY KEY,
-  nome VARCHAR(150)        NOT NULL,
-  idade INT                NOT NULL,
-  cep VARCHAR(13)           NOT NULL,
-  cidade VARCHAR(100)      NOT NULL,
-  estado VARCHAR(2)        NOT NULL,
-  rua VARCHAR(150)         NOT NULL,
-  bairro VARCHAR(100)      NOT NULL,
-  ensino_medio TINYINT(1)  NOT NULL,
-  sexo VARCHAR(20)         NOT NULL,
-  salario DECIMAL(12,2)    NOT NULL,
-  anexo VARCHAR(255)       NOT NULL
+  nome VARCHAR(150) NOT NULL,
+  idade INT NOT NULL,
+  cep VARCHAR(13) NOT NULL,
+  cidade VARCHAR(100) NOT NULL,
+  estado VARCHAR(2) NOT NULL,
+  rua VARCHAR(150) NOT NULL,
+  bairro VARCHAR(100) NOT NULL,
+  ensino_medio TINYINT(1) NOT NULL,
+  sexo VARCHAR(20) NOT NULL,
+  salario DECIMAL(12,2) NOT NULL,
+  anexo VARCHAR(255) NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 ```
-## 🎯 Objetivo do Desafio
-## **Front-end**
-### Página única com Blade + HTML/CSS/Bootstrap/JavaScript, seja criativo e não se prenda em visuais genéricos, queremos ver seu potencial!!
 
-#### *Formulário com:*
+## Validações
 
-- Nome, Idade, CEP, Cidade, Estado, Rua, Bairro
+- Campos obrigatórios destacados
+- Validação de idade (número positivo)
+- Formato de CEP (99.999-999)
+- Máscara de salário (formato brasileiro)
+- Validação de arquivo (tipo e tamanho)
 
-- Possui Ensino Médio (checkbox)
+```php
+$validated = $request->validate([
+    'nome' => 'required|string|max:150',
+    'idade' => 'required|integer|min:1',
+    'cep' => 'required|string|max:13',
+    'cidade' => 'required|string|max:100',
+    'estado' => 'required|string|size:2',
+    'rua' => 'required|string|max:150',
+    'bairro' => 'required|string|max:100',
+    'ensino_medio' => 'boolean',
+    'sexo' => 'required|in:Masculino,Feminino,Outro',
+    'salario' => 'required|numeric|min:0',
+    'anexo' => 'required|file|mimes:pdf,jpg,png|max:10240'
+]);
+```
 
-- Sexo (select: Masculino, Feminino, Outro)
+## 🌐 API Endpoints
 
-- Salário (máscara brasileira, ex.: 1.234,56)
+| Método | Endpoint | Descrição | Controller Method |
+|--------|-----------|------------|-------------------|
+| GET | `/` | Página principal com formulário | `index()` |
+| GET | `/cadastro/listar` | Listar todos os registros (JSON) | `listar()` |
+| GET | `/cadastro/estatisticas` | Obter estatísticas dos dados | `estatisticas()` |
+| POST | `/cadastro` | Criar novo registro | `store()` |
+| GET | `/cadastro/{id}` | Buscar registro específico | `show($id)` |
+| PUT | `/cadastro/{id}` | Atualizar registro existente | `update($id)` |
+| DELETE | `/cadastro/{id}` | Excluir registro | `destroy($id)` |
 
-- Anexo (upload de pdf/jpg/png, ≤ 10 MB)
+### Detalhamento dos Endpoints
 
-- #### *Ao submeter, exiba todos os registros (cards, tabela, gráfico, etc.)*
+#### GET `/`
+- **Descrição**: Retorna a view principal com formulário de cadastro
+- **Resposta**: HTML da página
 
-- #### *Cada registro com botões Editar e Excluir (com confirmação)*
-
-## **Back-end (CRUD sem Models/Migrations), sinta-se a vontade para usar models e migrations caso prefira, não se prenda aos comandos estipulados abaixo, nos mostre como você desenvolve um CRUD bem organizado e bem estruturado**
-- Create: DB::insert() com SQL cru
-
-- Read: DB::select() ordenado por id DESC
-
-- Update: DB::update() via formulário preenchido
-
-- Delete: DB::delete() com confirmação no front-end
-
-#### **Validações:** #### *Caso queira, adicione validações de frontend e backend*
-
-- Campos obrigatórios: nome, idade, cep, cidade, estado, rua, bairro, sexo
-
-- Idade: inteiro positivo
-
-- Possui Ensino médio: Checkbox
-
-- CEP: formato 99.999-999
-
-- Salário: numérico (converta vírgula para ponto antes de salvar 3.000,00)
-
-- Anexo: extensões permitidas (.pdf, .jpg, .png), tamanho máximo 10 MB
-
-
-## Este desafio serve como uma avaliação e complemento da entrevista, caso sinta dificuldade em algum passo ou no desenvolvimento do Desafio com o frontend e backend, deixe seu feedback!
-
-## Caso não consiga concluir todos os passos, não deixe de enviar o projeto, iremos avaliar tudo o que foi feito por você!
-
-<p align="center">
-  <img src="https://github.githubassets.com/images/spinners/octocat-spinner-32.gif" width="32" height="32" alt="Carregando..." />
-  <strong>Não se esqueça de salvar o seu projeto no seu GitHub em uma pasta pública!</strong>
-  <img src="https://github.githubassets.com/images/spinners/octocat-spinner-32.gif" width="32" height="32" alt="Carregando..." />
-</p>
-
-## HOSPEDAGEM SIMPLES
-
-- Hospedagem na Vercel, ou alguma outra hospedagem que tenha preferência, segue alguns exemplos:
-- https://vercel.com
-- https://dashboard.render.com/login
-
-
-## 🍀 Boa sorte e bons códigos!
-— Time Avelar
+#### GET `/cadastro/listar`
+- **Descrição**: Retorna todos os registros em formato JSON
+- **Resposta**: 
+```json
+{
+  "data": [
+    {
+      "id": 1,
+      "nome": "João Silva",
+      "idade": 30,
+      "cep": "01.234-567",
+      "cidade": "São Paulo",
+      "estado": "SP",
+      "rua": "Rua das Flores",
+      "bairro": "Centro",
+      "ensino_medio": 1,
+      "sexo": "Masculino",
+      "salario": "3000.00",
+      "anexo": "arquivo_123.pdf",
+      "created_at": "2024-01-15 10:30:00"
+    }
+  ]
+}
