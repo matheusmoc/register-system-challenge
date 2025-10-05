@@ -1,0 +1,41 @@
+version: '3.8'
+
+services:
+  app:
+    image: lorisleiva/laravel-docker:8.2
+    container_name: laravel_app
+    restart: unless-stopped
+    working_dir: /var/www/html
+    volumes:
+      - .:/var/www/html
+    ports:
+      - "8000:8000"
+    environment:
+      - DB_HOST=db
+      - DB_DATABASE=laravel_local
+      - DB_USERNAME=laravel_user
+      - DB_PASSWORD=secret
+    depends_on:
+      - db
+    command: >
+      sh -c "composer install --no-interaction --prefer-dist --optimize-autoloader &&
+             php artisan key:generate &&
+             php artisan migrate --force &&
+             php artisan serve --host=0.0.0.0 --port=8000"
+
+  db:
+    image: mysql:8.0
+    container_name: laravel_db
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: laravel_local
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_USER: laravel_user
+      MYSQL_PASSWORD: secret
+    ports:
+      - "3306:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+
+volumes:
+  db_data:
