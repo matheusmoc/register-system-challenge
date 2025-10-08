@@ -455,7 +455,7 @@
 <script src="https://cdn.jsdelivr.net/npm/vue@2.7.16/dist/vue.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/vue-the-mask@0.11.1/dist/vue-the-mask.min.js"></script>
 <script src="https://unpkg.com/v-money@0.8.1/dist/v-money.js"></script>
-<script src="{{ asset('js/cadastro.js') }}"></script>
+<script src="/js/cadastro.js"></script>
 
 </body>
 </html>
