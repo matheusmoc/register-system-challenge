@@ -9,7 +9,7 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link rel="stylesheet" href="/css/cadastro.css">
+    <link rel="stylesheet" href="{{ asset('css/cadastro.css') }}">
 </head>
 <body>
     <div id="app">
@@ -455,7 +455,7 @@
 <script src="https://cdn.jsdelivr.net/npm/vue@2.7.16/dist/vue.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/vue-the-mask@0.11.1/dist/vue-the-mask.min.js"></script>
 <script src="https://unpkg.com/v-money@0.8.1/dist/v-money.js"></script>
-<script src="/js/cadastro.js"></script>
+<script src="{{ asset('js/cadastro.js') }}"></script>
 
 </body>
 </html>
